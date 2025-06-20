@@ -8,6 +8,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
+use App\Application\Middleware\JwtMiddleware;
+
 
 return function (App $app) {
     $app->options('/{routes:.*}', function (Request $request, Response $response) {
@@ -24,6 +26,12 @@ return function (App $app) {
         $group->post('/register', \App\Application\Actions\Auth\RegisterAction::class);
         $group->post('/login', \App\Application\Actions\Auth\LoginAction::class);
     });
+
+    // Protected routes
+    $app->group('/api', function (Group $group) {
+        $group->get('/me', \App\Application\Actions\User\MeAction::class);
+        // more endpoints
+    })->add(new JwtMiddleware($_ENV['JWT_SECRET']));
 
     //testing
     $app->get('/test-db', function ($request, $response, $args) {

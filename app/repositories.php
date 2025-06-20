@@ -8,6 +8,8 @@ use DI\ContainerBuilder;
 use Psr\Container\ContainerInterface;
 use App\Domain\Task\TaskRepository;
 use App\Infrastructure\Persistence\Task\PostgresTaskRepository;
+use App\Domain\Study\StudyLogRepository;
+use App\Infrastructure\Persistence\Study\PostgresStudyLogRepository;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -15,5 +17,6 @@ return function (ContainerBuilder $containerBuilder) {
             return new PostgresUserRepository($c->get(PDO::class));
         },
         TaskRepository::class => \DI\autowire(PostgresTaskRepository::class),
+        StudyLogRepository::class => \DI\autowire(PostgresStudyLogRepository::class),
     ]);
 };

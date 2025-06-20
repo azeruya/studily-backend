@@ -21,7 +21,7 @@ class GetTasksAction extends Action
 
     protected function action(): Response
     {
-        $userId = (int) $this->resolveArg('id');
+        $userId = $this->request->getAttribute('token')->sub; // user ID from JWT
         $tasks = $this->taskRepository->findTasksByUserId($userId);
 
         return $this->respondWithData($tasks);

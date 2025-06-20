@@ -28,15 +28,16 @@ return function (App $app) {
     });
 
    $app->group('/tasks', function (Group $group) {
-        $group->get('/user/{id}', \App\Application\Actions\Task\GetTasksAction::class);
+        $group->get('', \App\Application\Actions\Task\GetTasksAction::class);
         $group->post('', \App\Application\Actions\Task\CreateTaskAction::class);
         $group->put('/{taskId}', \App\Application\Actions\Task\UpdateTaskAction::class);
         $group->delete('/{taskId}', \App\Application\Actions\Task\DeleteTaskAction::class);
-        // You can later add:
-        // $group->post('', \App\Application\Actions\Task\CreateTaskAction::class);
-        // $group->put('/{taskId}', \App\Application\Actions\Task\UpdateTaskAction::class);
-        // $group->delete('/{taskId}', \App\Application\Actions\Task\DeleteTaskAction::class);
     })->add(new JwtMiddleware($_ENV['JWT_SECRET']));
+
+    $app->group('/study', function (Group $group) {
+        $group->post('/log', \App\Application\Actions\Study\LogStudyAction::class);
+    })->add(new JwtMiddleware($_ENV['JWT_SECRET']));
+
 
     //testing
     $app->get('/test-db', function ($request, $response, $args) {

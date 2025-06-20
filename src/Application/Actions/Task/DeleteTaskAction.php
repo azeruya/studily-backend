@@ -22,6 +22,15 @@ class DeleteTaskAction extends Action
     protected function action(): Response
     {
         $taskId = (int) $this->resolveArg('taskId');
+        $userId = $this->request->getAttribute('token')->sub;
+
+        // Fetch all tasks for the user
+        $tasks = $this->taskRepository->findTasksByUserId($userId);
+        $task = array_filter($tasks, fn($t) => $t['id'] === $taskId);
+
+        if (empty($task)) {
+            return $this->respondWithData(['error' => 'Unauthorized or task not found'], 403);
+        }
 
         $success = $this->taskRepository->deleteTask($taskId);
 
@@ -29,6 +38,6 @@ class DeleteTaskAction extends Action
             return $this->respondWithData(['message' => 'Task deleted']);
         }
 
-        return $this->respondWithData(['error' => 'Task not found or could not be deleted'], 404);
+        return $this->respondWithData(['error' => 'Task could not be deleted'], 500);
     }
 }

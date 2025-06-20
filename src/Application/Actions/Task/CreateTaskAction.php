@@ -23,16 +23,20 @@ class CreateTaskAction extends Action
     {
         $data = $this->request->getParsedBody();
 
+        // Get the user ID from the JWT token
+        $userId = $this->request->getAttribute('token')->sub ?? null;
+
         // Validate input
-        if (!isset($data['user_id'], $data['title'])) {
-            return $this->respondWithData(['error' => 'user_id and title are required'], 400);
+        if (!$userId || empty($data['title'])) {
+            return $this->respondWithData(['error' => 'User not authenticated or title missing'], 400);
         }
 
         $taskId = $this->taskRepository->createTask([
-            'user_id' => $data['user_id'],
+            'user_id' => $userId,
             'title' => $data['title'],
         ]);
 
         return $this->respondWithData(['message' => 'Task created', 'task_id' => $taskId], 201);
     }
+
 }

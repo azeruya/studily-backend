@@ -11,6 +11,8 @@ use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use App\Application\Actions\Task\GetTasksAction;
+use App\Domain\Task\TaskRepository;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -54,6 +56,14 @@ return function (ContainerBuilder $containerBuilder) {
                 $c->get(LoggerInterface::class),
                 $c->get(SettingsInterface::class),
                 $c->get(PDO::class)
+            );
+        },
+
+        //get action binding
+        GetTasksAction::class => function (ContainerInterface $c) {
+            return new GetTasksAction(
+                $c->get(LoggerInterface::class),
+                $c->get(TaskRepository::class)
             );
         },
 

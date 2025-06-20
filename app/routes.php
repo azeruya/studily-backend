@@ -27,10 +27,12 @@ return function (App $app) {
         $group->post('/login', \App\Application\Actions\Auth\LoginAction::class);
     });
 
-    // Protected routes
-    $app->group('/api', function (Group $group) {
-        $group->get('/me', \App\Application\Actions\User\MeAction::class);
-        // more endpoints
+   $app->group('/tasks', function (Group $group) {
+        $group->get('/user/{id}', \App\Application\Actions\Task\GetTasksAction::class);
+        // You can later add:
+        // $group->post('', \App\Application\Actions\Task\CreateTaskAction::class);
+        // $group->put('/{taskId}', \App\Application\Actions\Task\UpdateTaskAction::class);
+        // $group->delete('/{taskId}', \App\Application\Actions\Task\DeleteTaskAction::class);
     })->add(new JwtMiddleware($_ENV['JWT_SECRET']));
 
     //testing

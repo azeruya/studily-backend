@@ -40,4 +40,16 @@ class PostgresUserRepository implements UserRepository
 
         return new User($row['id'], $row['name'], $row['email']);
     }
+
+    public function equipCharacter(int $userId, int $characterId): bool
+    {
+        $stmt = $this->pdo->prepare(
+            "UPDATE users SET equipped_character_id = :character_id WHERE id = :user_id"
+        );
+
+        return $stmt->execute([
+            'character_id' => $characterId,
+            'user_id' => $userId,
+        ]);
+    }
 }

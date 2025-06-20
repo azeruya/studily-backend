@@ -37,6 +37,12 @@ class LogStudyAction extends Action
         // Update streak
         $this->studyLogRepository->updateStreak($userId, $currentStreak, $today);
 
-        return $this->respondWithData(['message' => 'Study logged successfully.'], 201);
+        $currentStreak = $this->studyLogRepository->getCurrentStreak($userId);
+        $this->studyLogRepository->unlockCharacters($userId, $currentStreak);
+
+        return $this->respondWithData([
+            'message' => 'Study logged successfully.',
+            'current_streak' => $currentStreak
+        ], 201);
     }
 }

@@ -38,6 +38,11 @@ return function (App $app) {
         $group->post('/log', \App\Application\Actions\Study\LogStudyAction::class);
     })->add(new JwtMiddleware($_ENV['JWT_SECRET']));
 
+    $app->group('/characters', function (Group $group) {
+        $group->get('/unlocked', \App\Application\Actions\Character\GetUnlockedCharactersAction::class);
+        $group->get('/all', \App\Application\Actions\Character\ListCharactersAction::class);
+        $group->post('/equip/{characterId}', \App\Application\Actions\Character\EquipCharacterAction::class);
+    })->add(new JwtMiddleware($_ENV['JWT_SECRET']));
 
     //testing
     $app->get('/test-db', function ($request, $response, $args) {

@@ -17,4 +17,5 @@ interface UserRepository
      * @throws UserNotFoundException
      */
     public function findUserById(int $id): User;
+    public function equipCharacter(int $userId, int $characterId): bool;
 }

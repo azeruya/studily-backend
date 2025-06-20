@@ -75,4 +75,35 @@ class PostgresStudyLogRepository implements StudyLogRepository
         $stmt->execute(['user_id' => $userId]);
         return (int) $stmt->fetchColumn();
     }
+
+    public function unlockCharacters(int $userId, int $currentStreak): void
+    {
+        $stmt = $this->pdo->prepare("
+            INSERT INTO user_characters (user_id, character_id)
+            SELECT :user_id, c.id
+            FROM characters c
+            WHERE c.streak_required <= :streak
+            AND NOT EXISTS (
+                SELECT 1 FROM user_characters uc
+                WHERE uc.user_id = :user_id AND uc.character_id = c.id
+            )
+        ");
+        $stmt->execute([
+            'user_id' => $userId,
+            'streak' => $currentStreak
+        ]);
+    }
+
+    public function getUnlockedCharacters(int $userId): array
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT c.id, c.name, c.image_url, c.streak_required, uc.unlocked_at
+            FROM characters c
+            JOIN user_characters uc ON c.id = uc.character_id
+            WHERE uc.user_id = :user_id
+            ORDER BY c.streak_required
+        ");
+        $stmt->execute(['user_id' => $userId]);
+        return $stmt->fetchAll();
+    }
 }

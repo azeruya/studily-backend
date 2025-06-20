@@ -10,6 +10,9 @@ use App\Domain\Task\TaskRepository;
 use App\Infrastructure\Persistence\Task\PostgresTaskRepository;
 use App\Domain\Study\StudyLogRepository;
 use App\Infrastructure\Persistence\Study\PostgresStudyLogRepository;
+use App\Domain\Character\CharacterRepository;
+use App\Infrastructure\Persistence\Character\PostgresCharacterRepository;
+use App\Application\Actions\Character\ListCharactersAction;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -18,5 +21,6 @@ return function (ContainerBuilder $containerBuilder) {
         },
         TaskRepository::class => \DI\autowire(PostgresTaskRepository::class),
         StudyLogRepository::class => \DI\autowire(PostgresStudyLogRepository::class),
+        CharacterRepository::class => \DI\autowire(PostgresCharacterRepository::class),
     ]);
 };

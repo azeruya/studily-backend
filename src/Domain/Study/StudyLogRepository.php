@@ -8,4 +8,6 @@ interface StudyLogRepository
     public function hasLoggedToday(int $userId): bool;
     public function getCurrentStreak(int $userId): int;
     public function updateStreak(int $userId): void;
+    public function unlockCharacters(int $userId, int $currentStreak): void;
+    public function getUnlockedCharacters(int $userId): array;
 }

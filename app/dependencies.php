@@ -15,6 +15,8 @@ use App\Application\Actions\Task\GetTasksAction;
 use App\Domain\Task\TaskRepository;
 use App\Application\Actions\Task\UpdateTaskAction;
 use App\Application\Actions\Task\DeleteTaskAction;
+use App\Application\Actions\Character\EquipCharacterAction;
+use App\Domain\User\UserRepository;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -80,6 +82,14 @@ return function (ContainerBuilder $containerBuilder) {
             return new DeleteTaskAction(
                 $c->get(LoggerInterface::class),
                 $c->get(TaskRepository::class)
+            );
+        },
+
+        EquipCharacterAction::class => function (ContainerInterface $c) {
+            return new EquipCharacterAction(
+                $c->get(LoggerInterface::class),
+                $c->get(App\Domain\User\UserRepository::class),
+                $c->get(App\Domain\Study\StudyLogRepository::class)
             );
         },
     ]);

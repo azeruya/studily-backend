@@ -20,6 +20,11 @@ return function (App $app) {
         return $response;
     });
 
+    $app->group('/auth', function (Group $group) {
+        $group->post('/register', \App\Application\Actions\Auth\RegisterAction::class);
+        $group->post('/login', \App\Application\Actions\Auth\LoginAction::class);
+    });
+
     //testing
     $app->get('/test-db', function ($request, $response, $args) {
         $settings = $this->get(\App\Application\Settings\SettingsInterface::class);

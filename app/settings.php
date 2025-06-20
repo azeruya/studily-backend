@@ -22,12 +22,12 @@ return function (ContainerBuilder $containerBuilder) {
                     'level' => Logger::DEBUG,
                 ],
                 'db' => [
-                    'driver' => 'pgsql',
-                    'host' => 'aws-0-ap-southeast-1.pooler.supabase.com',
-                    'port' => 5432,
-                    'database' => 'postgres',
-                    'username' => 'postgres.dtzcuvuljhxhjmalkkti',
-                    'password' => 'Studily123.',
+                    'driver'   => $_ENV['DB_DRIVER'] ?? 'pgsql',
+                    'host'     => $_ENV['DB_HOST'] ?? '',
+                    'port'     => $_ENV['DB_PORT'] ?? 5432,
+                    'database' => $_ENV['DB_DATABASE'] ?? '',
+                    'username' => $_ENV['DB_USERNAME'] ?? '',
+                    'password' => $_ENV['DB_PASSWORD'] ?? '',
                 ],
             ]);
         }

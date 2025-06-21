@@ -13,6 +13,8 @@ use App\Infrastructure\Persistence\Study\PostgresStudyLogRepository;
 use App\Domain\Character\CharacterRepository;
 use App\Infrastructure\Persistence\Character\PostgresCharacterRepository;
 use App\Application\Actions\Character\ListCharactersAction;
+use App\Domain\Pomodoro\PomodoroSessionRepository;
+use App\Infrastructure\Persistence\Pomodoro\PostgresPomodoroSessionRepository;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -22,5 +24,11 @@ return function (ContainerBuilder $containerBuilder) {
         TaskRepository::class => \DI\autowire(PostgresTaskRepository::class),
         StudyLogRepository::class => \DI\autowire(PostgresStudyLogRepository::class),
         CharacterRepository::class => \DI\autowire(PostgresCharacterRepository::class),
+        PomodoroSessionRepository::class => function (ContainerInterface $c) {
+            return new PostgresPomodoroSessionRepository(
+                $c->get(PDO::class),
+                $c->get(StudyLogRepository::class)
+            );
+        },
     ]);
 };

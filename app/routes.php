@@ -42,6 +42,12 @@ return function (App $app) {
         $group->get('/unlocked', \App\Application\Actions\Character\GetUnlockedCharactersAction::class);
         $group->get('/all', \App\Application\Actions\Character\ListCharactersAction::class);
         $group->post('/equip/{characterId}', \App\Application\Actions\Character\EquipCharacterAction::class);
+        $group->get('/equipped', \App\Application\Actions\Character\GetEquippedCharacterAction::class);
+    })->add(new JwtMiddleware($_ENV['JWT_SECRET']));
+
+    $app->group('/pomodoro', function (Group $group) {
+        $group->post('/log', \App\Application\Actions\Pomodoro\LogPomodoroSessionAction::class);
+        $group->get('/sessions', \App\Application\Actions\Pomodoro\GetPomodoroSessionsAction::class);
     })->add(new JwtMiddleware($_ENV['JWT_SECRET']));
 
     //testing
@@ -60,4 +66,8 @@ return function (App $app) {
         $group->get('', ListUsersAction::class);
         $group->get('/{id}', ViewUserAction::class);
     });
+
+    $app->get('/me', \App\Application\Actions\User\GetMeAction::class)
+        ->add(new JwtMiddleware($_ENV['JWT_SECRET']));
+
 };

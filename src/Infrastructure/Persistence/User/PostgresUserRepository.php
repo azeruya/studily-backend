@@ -52,4 +52,18 @@ class PostgresUserRepository implements UserRepository
             'user_id' => $userId,
         ]);
     }
+
+    public function getEquippedCharacter(int $userId): ?array
+    {
+        $stmt = $this->pdo->prepare(
+            'SELECT c.id, c.name, c.image_url, c.streak_required
+            FROM users u
+            JOIN characters c ON u.equipped_character_id = c.id
+            WHERE u.id = :user_id AND u.equipped_character_id IS NOT NULL'
+        );
+        $stmt->execute(['user_id' => $userId]);
+        $character = $stmt->fetch();
+
+        return $character ?: null;
+    }
 }

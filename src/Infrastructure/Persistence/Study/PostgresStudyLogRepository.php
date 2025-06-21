@@ -30,11 +30,23 @@ class PostgresStudyLogRepository implements StudyLogRepository
 
     public function logStudy(int $userId): bool
     {
+        if ($this->hasLoggedToday($userId)) {
+            return false;
+        }
+
         $stmt = $this->pdo->prepare('INSERT INTO user_study_logs (user_id, study_date) VALUES (:user_id, :study_date)');
-        return $stmt->execute([
+        $success = $stmt->execute([
             'user_id' => $userId,
             'study_date' => date('Y-m-d')
         ]);
+
+        if ($success) {
+            $this->updateStreak($userId);
+            $currentStreak = $this->getCurrentStreak($userId);
+            $this->unlockCharacters($userId, $currentStreak);
+        }
+
+        return $success;
     }
 
     public function updateStreak(int $userId): void
@@ -102,6 +114,30 @@ class PostgresStudyLogRepository implements StudyLogRepository
             JOIN user_characters uc ON c.id = uc.character_id
             WHERE uc.user_id = :user_id
             ORDER BY c.streak_required
+        ");
+        $stmt->execute(['user_id' => $userId]);
+        return $stmt->fetchAll();
+    }
+
+    public function getTodayStudyLogId(int $userId): int
+    {
+        $today = date('Y-m-d');
+        $stmt = $this->pdo->prepare("SELECT id FROM user_study_logs WHERE user_id = :user_id AND study_date = :today");
+        $stmt->execute([
+            'user_id' => $userId,
+            'today' => $today,
+        ]);
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function getPomodoroSessions(int $userId): array
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT ps.id, ps.start_time, ps.end_time, ps.is_completed, usl.study_date
+            FROM pomodoro_sessions ps
+            JOIN user_study_logs usl ON ps.study_log_id = usl.id
+            WHERE ps.user_id = :user_id
+            ORDER BY ps.start_time DESC
         ");
         $stmt->execute(['user_id' => $userId]);
         return $stmt->fetchAll();

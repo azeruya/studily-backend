@@ -28,7 +28,6 @@ class PostgresTaskRepository implements TaskRepository
         return $stmt->fetchAll();
     }
 
-
     public function updateTask(int $taskId, array $data): bool
     {
         $stmt = $this->pdo->prepare("UPDATE tasks SET title = :title, is_completed = :is_completed, completed_at = :completed_at WHERE id = :id");

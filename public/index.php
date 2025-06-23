@@ -1,5 +1,10 @@
 <?php
 
+header('Access-Control-Allow-Origin: http://localhost:5173');
+header('Access-Control-Allow-Headers: X-Requested-With, Content-Type, Accept, Origin, Authorization');
+header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
+header('Access-Control-Allow-Credentials: true');
+
 declare(strict_types=1);
 
 use App\Application\Handlers\HttpErrorHandler;

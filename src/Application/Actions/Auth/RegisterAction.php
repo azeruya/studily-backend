@@ -6,19 +6,19 @@ namespace App\Application\Actions\Auth;
 
 use App\Application\Actions\Action;
 use App\Application\Settings\SettingsInterface;
-use App\Domain\Study\StudyRepository;
+use App\Domain\Study\StudyLogRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
 class RegisterAction extends Action
 {
     private SettingsInterface $settings;
-    private StudyRepository $studyRepository;
+    private StudyLogRepository $studyRepository;
 
     public function __construct(
         LoggerInterface $logger,
         SettingsInterface $settings,
-        StudyRepository $studyRepository
+        StudyLogRepository $studyRepository
     ) {
         parent::__construct($logger);
         $this->settings = $settings;

@@ -11,6 +11,7 @@ use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use App\Domain\Study\StudyLogRepository;
 use App\Application\Actions\Task\GetTasksAction;
 use App\Domain\Task\TaskRepository;
 use App\Application\Actions\Task\UpdateTaskAction;
@@ -50,7 +51,8 @@ return function (ContainerBuilder $containerBuilder) {
         RegisterAction::class => function (ContainerInterface $c) {
             return new RegisterAction(
                 $c->get(LoggerInterface::class),
-                $c->get(SettingsInterface::class)
+                $c->get(SettingsInterface::class),
+                $c->get(StudyLogRepository::class)
             );
         },
 
